@@ -46,7 +46,8 @@ func execute(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	port := os.Getenv("PORT")
 	http.HandleFunc("/", handler)
 	http.HandleFunc("/get", execute)
-	log.Fatal(http.ListenAndServe(":8081", nil))
+	log.Fatal(http.ListenAndServe(":" + port, nil))
 }

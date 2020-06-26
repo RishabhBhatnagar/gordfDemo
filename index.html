@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Demo of goRdf Parser</title>
+    <style>
+        body {
+            height: 100%
+        }
+        textarea {
+            width: 49%;
+            height: 97vh;
+            overflow-y: scroll;
+            overflow-x: scroll;
+            resize: none
+        }
+    </style>
+    <script>
+        function setOutput() {
+        let xmlHttpRequest = new XMLHttpRequest();
+        xmlHttpRequest.onreadystatechange = function() {
+            if (this.readyState === 4 && this.status === 200) {
+                document.getElementById("outputTextArea").value = this.responseText
+            }
+        }
+        xmlHttpRequest.open("POST", "/get?data=" + encodeURIComponent(document.getElementById("inputTextArea").value), true);
+        xmlHttpRequest.send("name=rishabh");
+        }
+    </script>
+</head>
+
+<body>
+<form>
+    <textarea id="inputTextArea" oninput="setOutput()"></textarea>
+    <textarea id="outputTextArea" style="float: right" readonly></textarea>
+</form>
+</body>
+</html>

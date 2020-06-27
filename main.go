@@ -32,18 +32,16 @@ func triplesString(triples map[string]*parser.Triple) string {
 	return op
 }
 
-type test_struct struct {
-	name string
-}
 
 func execute(w http.ResponseWriter, r *http.Request) {
 	filename := "temp.rdf"
-	if ioutil.WriteFile(filename, []byte(r.FormValue("data")), 777) != nil {
-		fmt.Fprint(w, "Internal server error: writing to file err")
+	err := ioutil.WriteFile(filename, []byte(r.FormValue("data")), 777)
+	if err != nil {
+		fmt.Fprintf(w, err.Error())
 		return
 	}
 
-	err := r.ParseMultipartForm(2 * 1024 * 1024)
+	err = r.ParseMultipartForm(2 * 1024 * 1024)
 	if err != nil {
 		fmt.Fprint(w, "failed to get input data. network issue.")
 		return

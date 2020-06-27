@@ -17,20 +17,23 @@
     </style>
     <script>
         function setOutput() {
-        let xmlHttpRequest = new XMLHttpRequest();
-        xmlHttpRequest.onreadystatechange = function() {
-            if (this.readyState === 4 && this.status === 200) {
-                document.getElementById("outputTextArea").value = this.responseText
-            }
-        }
-        xmlHttpRequest.open("POST", "/get?data=" + encodeURIComponent(document.getElementById("inputTextArea").value), true);
-        xmlHttpRequest.send("name=rishabh");
+            let xmlHttpRequest = new XMLHttpRequest();
+            xmlHttpRequest.onreadystatechange = function() {
+                if (this.readyState === 4 && this.status === 200) {
+                    document.getElementById("outputTextArea").value = this.responseText;
+                }
+            };
+            // xmlHttpRequest.open("POST", "/get?data=" + encodeURIComponent(document.getElementById("inputTextArea").value), true);
+            let fd = new FormData();
+            xmlHttpRequest.open("POST", "/get", true);
+            fd.append("data", document.getElementById("inputTextArea").value);
+            xmlHttpRequest.send(fd);
         }
     </script>
 </head>
 
 <body>
-<form>
+<form id="rishabh">
     <textarea id="inputTextArea" oninput="setOutput()" placeholder="Enter the RDF input. The output triples will automatically be updated in the rhs textarea. Note: This might not work for gigantic inputs."></textarea>
     <textarea id="outputTextArea" style="float: right" readonly></textarea>
 </form>

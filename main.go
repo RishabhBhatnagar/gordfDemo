@@ -27,6 +27,7 @@ func triplesString(triples map[string]*parser.Triple) string {
 		op  += fmt.Sprintf("\tSubject:   %v\n", triple.Subject)
 		op  += fmt.Sprintf("\tPredicate: %v\n", triple.Predicate)
 		op  += fmt.Sprintf("\tObject:    %v\n", triple.Object)
+		op += fmt.Sprintf("\n")
 	}
 	return op
 }

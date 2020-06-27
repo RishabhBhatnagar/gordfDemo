@@ -37,6 +37,7 @@ type test_struct struct {
 
 func execute(w http.ResponseWriter, r *http.Request) {
 	filename := "temp.rdf"
+	fmt.Fprint(w, "hold on, your process is being sent to the server. The response will be redirected soon")
 	if ioutil.WriteFile(filename, []byte(r.FormValue("data")), 777) != nil {
 		fmt.Fprint(w, "Internal server error: writing to file err")
 		return

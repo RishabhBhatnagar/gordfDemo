@@ -24,7 +24,7 @@ func triplesString(triples map[string]*parser.Triple) string {
 	for tripleHash := range triples {
 		i++
 		triple := triples[tripleHash]
-		if triple.Subject.ID == "https://www.person.com/BOB" && triple.Predicate.ID == "N0" && strings.Contains(triple.Object.ID, "Alice"){
+		if triple.Object.NodeType == parser.LITERAL && strings.Contains(triple.Object.ID, "Alice") {
 			triple = &parser.Triple{
 				Subject:   &parser.Node{NodeType: parser.IRI, ID: "https://www.person.com/BOB"},
 				Predicate: &parser.Node{NodeType: parser.BLANK, ID: "https://www.sample.com/namespace#likes"},

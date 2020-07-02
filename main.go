@@ -45,7 +45,7 @@ func triplesString(triples map[string]*parser.Triple) string {
 
 func execute(w http.ResponseWriter, r *http.Request) {
 	filename := "temp.rdf"
-	err := ioutil.WriteFile(filename, []byte(r.FormValue("data")), 777)
+	err := ioutil.WriteFile(filename, []byte(strings.ReplaceAll(r.FormValue("data"), "”", "\"")), 777)
 	defer os.Remove(filename)
 	if err != nil {
 		fmt.Fprintf(w, err.Error())

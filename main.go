@@ -60,17 +60,11 @@ func execute(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Println(r.FormValue("data"))
 	rdfParser := parser.New()
-	xmlReader, err := rdfloader.XMLReaderFromFilePath(filename)
 	if err != nil {
 		fmt.Fprintf(w, err.Error())
 		return
 	}
-	rootBlock, err := xmlReader.Read()
-	if err != nil {
-		fmt.Fprintf(w, err.Error())
-		return
-	}
-	err = rdfParser.Parse(rootBlock)
+	err = rdfParser.Parse(filename)
 	if err != nil {
 		fmt.Fprintf(w, err.Error())
 		return

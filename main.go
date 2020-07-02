@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"github.com/RishabhBhatnagar/gordf/rdfloader/parser"
-	rdfloader "github.com/RishabhBhatnagar/gordf/rdfloader/xmlreader"
 	"html/template"
 	"io/ioutil"
 	"log"

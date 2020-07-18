@@ -4,3 +4,9 @@ github.com/RishabhBhatnagar/gordf v0.0.0-20200626184651-ad6c1e2e5406 h1:Pzh/igGM
 github.com/RishabhBhatnagar/gordf v0.0.0-20200626184651-ad6c1e2e5406/go.mod h1:yY0t7WNgF2mI8Y5DGhpNF/KUqkwQl/Imym5OtSHCpgE=
 github.com/RishabhBhatnagar/gordf v0.0.0-20200627123020-8e069327faed h1:KKTF0Dx3E3sKawh2hCW+aqKFaL52HXomcsESB7j8W/M=
 github.com/RishabhBhatnagar/gordf v0.0.0-20200627123020-8e069327faed/go.mod h1:yY0t7WNgF2mI8Y5DGhpNF/KUqkwQl/Imym5OtSHCpgE=
+github.com/RishabhBhatnagar/gordf v0.0.0-20200718130348-503dea6c3f47 h1:t+PityGPliDrN3W24dLLus+438Lc+2IDYZwqcFd+rY4=
+github.com/RishabhBhatnagar/gordf v0.0.0-20200718130348-503dea6c3f47/go.mod h1:yY0t7WNgF2mI8Y5DGhpNF/KUqkwQl/Imym5OtSHCpgE=
+github.com/RishabhBhatnagar/gordf v0.0.0-20200718175001-a4e96f58c771 h1:KMMnKJ44GcFsEMuYytWcaawdsaRv2rRLfv3SNGI8htI=
+github.com/RishabhBhatnagar/gordf v0.0.0-20200718175001-a4e96f58c771/go.mod h1:yY0t7WNgF2mI8Y5DGhpNF/KUqkwQl/Imym5OtSHCpgE=
+github.com/RishabhBhatnagar/gordf v0.0.0-20200718185235-561b756b8bba h1:EqccFH+jkHNaMDX0Mx/kX4tidTtwgXvbvzMN5v5V9b8=
+github.com/RishabhBhatnagar/gordf v0.0.0-20200718185235-561b756b8bba/go.mod h1:yY0t7WNgF2mI8Y5DGhpNF/KUqkwQl/Imym5OtSHCpgE=

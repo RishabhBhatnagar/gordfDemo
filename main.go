@@ -1,13 +1,18 @@
 package main
 
 import (
+	"bufio"
+	"bytes"
 	"fmt"
 	"github.com/RishabhBhatnagar/gordf/rdfloader/parser"
+	rdfloader "github.com/RishabhBhatnagar/gordf/rdfloader/xmlreader"
+	"github.com/RishabhBhatnagar/gordf/rdfwriter"
 	"html/template"
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 	"strings"
 )
 
@@ -18,65 +23,79 @@ func handler(w http.ResponseWriter, r *http.Request) {
 }
 
 
-func triplesString(triples map[string]*parser.Triple) string {
+func triplesString(triples []*parser.Triple) string {
 	op := ""
 	i := 0
 	for tripleHash := range triples {
 		i++
 		triple := triples[tripleHash]
-		if triple.Object.NodeType == parser.LITERAL && strings.Contains(triple.Object.ID, "Alice") {
-			triple = &parser.Triple{
-				Subject:   &parser.Node{NodeType: parser.IRI, ID: "https://www.person.com/BOB"},
-				Predicate: &parser.Node{NodeType: parser.BLANK, ID: "https://www.sample.com/namespace#likes"},
-				Object:    &parser.Node{NodeType: parser.LITERAL, ID: "Alice "},
-			}
-		}
 		op += fmt.Sprintf("Triple %v\n", i)
-		fmt.Println(triple.Subject.ID, "https://www.person.com/BOB", triple.Predicate.ID == "N0", strings.Contains(triple.Object.ID, "Alice"))
 		op  += fmt.Sprintf("\tSubject:   %v\n", triple.Subject)
 		op  += fmt.Sprintf("\tPredicate: %v\n", triple.Predicate)
 		op  += fmt.Sprintf("\tObject:    %v\n", triple.Object)
-
 		op += fmt.Sprintf("\n")
 	}
 	return op
 }
 
+func xmlreaderFromString(fileContent string) rdfloader.XMLReader {
+	return rdfloader.XMLReaderFromFileObject(bufio.NewReader(io.Reader(bytes.NewReader([]byte(fileContent)))))
+}
 
 func execute(w http.ResponseWriter, r *http.Request) {
-	filename := "temp.rdf"
-	err := ioutil.WriteFile(filename, []byte(strings.ReplaceAll(r.FormValue("data"), "”", "\"")), 777)
-	defer os.Remove(filename)
-	if err != nil {
-		fmt.Fprintf(w, err.Error())
-		return
-	}
-
-	err = r.ParseMultipartForm(2 * 1024 * 1024)
+	data := strings.ReplaceAll(r.FormValue("data"), "”", "\"")
+	err := r.ParseMultipartForm(2 * 1024 * 1024)
 	if err != nil {
 		fmt.Fprint(w, "failed to get input data. network issue.")
 		return
 	}
-	fmt.Println(r.FormValue("data"))
-	rdfParser := parser.New()
+	xmlReader := xmlreaderFromString(data)
+	rootBlock, err := xmlReader.Read()
 	if err != nil {
-		fmt.Fprintf(w, err.Error())
+		fmt.Fprint(w, err.Error())
 		return
 	}
-	err = rdfParser.Parse(filename)
+	rdfParser := parser.New()
+	err = rdfParser.Parse(rootBlock)
 	if err != nil {
 		fmt.Fprintf(w, err.Error())
 		return
 	} else {
-		err = os.Remove(filename)
-		if err != nil {
-			fmt.Fprint(w, "error removing temporary file")
-		}
 		fmt.Println(fmt.Fprintf(w, triplesString(rdfParser.Triples)))
 		return
 	}
 }
 
+func execute1(w http.ResponseWriter, r *http.Request) {
+	data := strings.ReplaceAll(r.FormValue("data"), "”", "\"")
+	err := r.ParseMultipartForm(2 * 1024 * 1024)
+	fmt.Println(err)
+	if err != nil {
+		fmt.Fprint(w, "failed to get input data. network issue.")
+		return
+	}
+	xmlReader := xmlreaderFromString(data)
+	rootBlock, err := xmlReader.Read()
+	fmt.Println(err)
+	if err != nil {
+		fmt.Fprint(w, err.Error())
+		return
+	}
+	rdfParser := parser.New()
+	err = rdfParser.Parse(rootBlock)
+	fmt.Println(err)
+	if err != nil {
+		fmt.Fprintf(w, err.Error())
+		return
+	} else {
+		outputFromForm := r.FormValue("tabchars")
+		tab, err := strconv.Unquote(outputFromForm)
+		err = rdfwriter.WriteToFile(w, rdfParser.Triples, rdfParser.SchemaDefinition, tab)
+		if err != nil {
+			fmt.Fprintf(w, err.Error())
+		}
+	}
+}
 
 func main() {
 	port := os.Getenv("PORT")
@@ -86,5 +105,6 @@ func main() {
 	fmt.Println(port)
 	http.HandleFunc("/", handler)
 	http.HandleFunc("/get", execute)
+	http.HandleFunc("/get1", execute1)
 	log.Fatal(http.ListenAndServe(":" + port, nil))
 }

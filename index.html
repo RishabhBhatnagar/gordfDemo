@@ -7,15 +7,32 @@
         body {
             height: 100%
         }
-        textarea {
-            width: 49%;
-            height: 97vh;
+        .op1 {
+            width: 98%;
+            height: 92vh;
+            overflow-y: scroll;
+            overflow-x: scroll;
+            resize: none
+        }
+        .op2 {
+            width: 98%;
+            height: 46vh;
             overflow-y: scroll;
             overflow-x: scroll;
             resize: none
         }
     </style>
     <script>
+        function quote(s) {
+            return '"' + s + '"'
+        }
+        function isPlaceHolder(el) {
+            return el.getAttribute("placeholder") && el.value === ''
+        }
+        function getTab() {
+            let obj = document.getElementById("tabchars");
+            return quote(obj.value)
+        }
         function setOutput() {
             let xmlHttpRequest = new XMLHttpRequest();
             document.getElementById("outputTextArea").value =  "hold on, your request is being processed. The response will be redirected soon";
@@ -24,19 +41,46 @@
                     document.getElementById("outputTextArea").value = this.responseText;
                 }
             };
-            // xmlHttpRequest.open("POST", "/get?data=" + encodeURIComponent(document.getElementById("inputTextArea").value), true);
             let fd = new FormData();
             xmlHttpRequest.open("POST", "/get", true);
             fd.append("data", document.getElementById("inputTextArea").value);
             xmlHttpRequest.send(fd);
+
+
+            let xmlHttpRequest1 = new XMLHttpRequest();
+            document.getElementById("outputTextArea2").value =  "hold on, your request is being processed. The response will be redirected soon";
+            xmlHttpRequest1.onreadystatechange = function() {
+                if (this.readyState === 4 && this.status === 200) {
+                    document.getElementById("outputTextArea2").value = this.responseText;
+                }
+            };
+            let fd1 = new FormData();
+            xmlHttpRequest1.open("POST", "/get1", true);
+            fd1.append("data", document.getElementById("inputTextArea").value);
+            fd1.append("tabchars", getTab())
+            xmlHttpRequest1.send(fd1);
         }
     </script>
 </head>
 
 <body>
 <form id="rishabh">
-    <textarea id="inputTextArea" oninput="setOutput()" placeholder="Enter the RDF input. The output triples will automatically be updated in the rhs textarea. Note: This might not work for gigantic inputs."></textarea>
-    <textarea id="outputTextArea" style="float: right" readonly></textarea>
+    Enter the Tab character in raw form: <input id="tabchars" placeholder="\t\t for example" type="text" oninput="setOutput()">
+    <table width="100%">
+        <tr>
+            <td width="50%" rowspan="2">
+                <textarea class="op1" id="inputTextArea" oninput="setOutput()" placeholder="Enter the RDF input. The output triples will automatically be updated in the rhs textarea. Note: This might not work for gigantic inputs."></textarea>
+            </td>
+            <td width="50%">
+                <textarea class="op2" id="outputTextArea" readonly></textarea>
+            </td>
+        </tr>
+        <tr>
+            <td width="50%">
+                <textarea class="op2" id="outputTextArea2" readonly></textarea>
+            </td>
+        </tr>
+    </table>
 </form>
 </body>
 </html>
